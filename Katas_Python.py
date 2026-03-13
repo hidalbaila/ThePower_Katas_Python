@@ -1,3 +1,8 @@
+from functools import reduce
+import math
+import re
+from collections import Counter
+
 """1. Escribe una función que reciba una cadena de texto como parámetro y devuelva un diccionario con las frecuencias
 de cada letra en la cadena. Los espacios no deben ser considerados."""
 def ejercicio_1(cadena):
@@ -55,7 +60,7 @@ lista_a = [8, 1, 0, 14]
 lista_b = [4, 5, 9, 8]
 # Llamamos a la función y mostramos el resultado
 resultado = ejercicio_4(lista_a, lista_b)
-print(f'Resultado del ejercicio 4: {resultado}')  # [8, 16, 24, 31]
+print(f'Resultado del ejercicio 4: {resultado}')  # [4, -4, -9, 6]
 
 
 """5. Escribe una función que tome una lista de números como parámetro y un valor opcional nota_aprobado, que por
@@ -183,7 +188,7 @@ print(f"Resultado del ejercicio 12: {resultado}") # [2, 5, 4, 7, 3, 2, 7]
 mayúsculas y minúsculas. Las letras no pueden estar repetidas. Usa la función map()"""
 def ejercicio_13(caracteres):
     # Nos aseguramos de que no haya letras repetidas
-    caracteres_unicos = set(caracteres)    
+    caracteres_unicos = set(map(lambda c: c.lower(), caracteres))  
     # Función que convierte cada letra a mayúscula y minúscula
     resultado = map(lambda c: (c.upper(), c.lower()), caracteres_unicos)    
     # Convertimos a lista y devolvemos
@@ -227,13 +232,12 @@ print(f"Resultado del ejercicio 16: {resultado}") #['Hola', 'Adiós', 'Ventana']
 
 """17. Crea una función que tome una lista de dígitos y devuelva el número correspondiente. Por ejemplo, [5,7,2]
 corresponde al número quinientos setenta y dos (572). Usa la función reduce()"""
-from functools import reduce
 def ejercicio_17(lista_digitos):
     return reduce(lambda acumulado, digito: acumulado * 10 + digito, lista_digitos)
 # Lista de ejemplo
 lista = [5, 7, 2]
 resultado = ejercicio_17(lista)
-print(f"Resultado del ejercicio 17: {resultado}") #[572]
+print(f"Resultado del ejercicio 17: {resultado}") #572
 
 
 """18. Escribe un programa en Python que cree una lista de diccionarios que contenga información de estudiantes
@@ -292,7 +296,6 @@ print(f"Resultado del ejercicio 21: {resultado}")  #[27]
 
 
 """22. Dada una lista numérica, obtén el producto total de los valores de dicha lista. Usa la función reduce()."""
-from functools import reduce
 def ejercicio_22(producto_total):
     # reduce aplica la función lambda acumulando el producto de los elementos
     return reduce(lambda x, y: x * y, producto_total)
@@ -305,7 +308,6 @@ print(f"Resultado del ejercicio 22: {resultado}")  #[720]
 
 
 """23. Concatena una lista de palabras. Usa la función reduce()."""
-from functools import reduce
 def ejercicio_23(lista_palabras):
     # reduce aplica la función lambda concatenando las palabras
     return reduce(lambda x, y: x + y, lista_palabras)
@@ -318,7 +320,6 @@ print(f"Resultado del ejercicio 23: {resultado}") #[Hola, soy tu tía]
 
 
 """24. Calcula la diferencia total en los valores de una lista. Usa la función reduce()."""
-from functools import reduce
 def ejercicio_24(diferencia_total):
     # reduce aplica la función lambda restando el producto de los elementos
     return reduce(lambda x, y: x - y, diferencia_total)
@@ -343,15 +344,12 @@ print(f"Resultado del ejercicio 25: {resultado}")  #[17]
 
 
 """26. Crea una función lambda que calcule el resto de la división entre dos números dados."""
-def ejercicio_26():
+def ejercicio_26(x,y):
     # Función lambda que recibe dos números y devuelve el resto
-    resto_division = lambda x, y: x % y
-       # Llamamos a la función lambda
-    resultado = resto_division(8, 3)
+    resto_division = lambda a, b: a % b
+    return resto_division(x, y)
     # Mostramos el resultado
-    print(f"Resultado del ejercicio 26: {resultado}")  # [2]
-# Llamamos a la función
-ejercicio_26()
+print(f"Resultado del ejercicio 26: {ejercicio_26(8,3)}")  # [2]
 
 
 """27. Crea una función que calcule el promedio de una lista de números."""
@@ -400,19 +398,15 @@ print(f"Resultado del ejercicio 29 (número): {ejercicio_29(números_confidencia
 
 """30. Crea una función que determine si dos palabras son anagramas, es decir, si están formadas por las mismas letras
 pero en diferente orden."""
-from collections import Counter
-def ejercicio_30():
-    def son_anagramas(palabra1, palabra2):
-        # Eliminamos espacios y pasamos a minúsculas
-        palabra1 = palabra1.replace(" ", "").lower()
-        palabra2 = palabra2.replace(" ", "").lower()
-        # Comparamos la frecuencia de cada letra
-        return Counter(palabra1) == Counter(palabra2)
+def son_anagramas(palabra1, palabra2):
+    # Eliminamos espacios y pasamos a minúsculas
+    palabra1 = palabra1.replace(" ", "").lower()
+    palabra2 = palabra2.replace(" ", "").lower()
+    # Comparamos la frecuencia de cada letra
+    return Counter(palabra1) == Counter(palabra2)
     # Ejemplo
-    resultado = son_anagramas("Cara", "arca")
-    print(f"Resultado del ejercicio 30: {resultado}")  # True
-# Llamamos a la función
-ejercicio_30()
+resultado = son_anagramas("Cara", "arca")
+print(f"Resultado del ejercicio 30: {resultado}")  # True
 
 
 """31. Crea una función que solicite al usuario ingresar una lista de nombres y luego solicite un nombre para buscar en
@@ -518,11 +512,11 @@ class Arbol:
         """Aumenta en 1 la longitud de todas las ramas existentes"""
         self.ramas = [rama + 1 for rama in self.ramas]
     def quitar_rama(self, posicion):
-        """Elimina una rama en la posición indicada (si existe)"""
+        """Elimina una rama en la posición indicada"""
         if 0 <= posicion < len(self.ramas):
             self.ramas.pop(posicion)
         else:
-            print(f"⚠️ No existe una rama en la posición {posicion}.")
+            raise IndexError("La rama indicada no existe.")
     def info_arbol(self):
         """Devuelve información sobre el tronco, número de ramas y longitudes"""
         return {
@@ -563,80 +557,78 @@ Caso de uso:
     2. Agregar 20 unidades de saldo de "Bob".
     3. Hacer una transferencia de 80 unidades desde "Bob" a "Alicia".
     4. Retirar 50 unidades de saldo a "Alicia"."""
-def ejercicio_36():
-    class UsuarioBanco:
-        def __init__(self, nombre, saldo, cuenta_corriente=True):
-            self.nombre = nombre
-            self.saldo = saldo
-            self.cuenta_corriente = cuenta_corriente
+class UsuarioBanco:
+    def __init__(self, nombre, saldo, cuenta_corriente=True):
+        self.nombre = nombre
+        self.saldo = saldo
+        self.cuenta_corriente = cuenta_corriente
 
-        def retirar_dinero(self, cantidad):
-            """Resta dinero del saldo si es posible"""
-            if not self.cuenta_corriente:
-                raise Exception(f"{self.nombre} no tiene cuenta corriente activa.")
-            if cantidad <= 0:
-                raise ValueError("La cantidad a retirar debe ser positiva.")
-            if cantidad > self.saldo:
-                raise Exception(f"Fondos insuficientes en la cuenta de {self.nombre}.")
-            self.saldo -= cantidad
-            print(f"{self.nombre} retiró {cantidad}. Saldo actual: {self.saldo}")
+    def retirar_dinero(self, cantidad):
+        """Resta dinero del saldo si es posible"""
+        if not self.cuenta_corriente:
+            raise Exception(f"{self.nombre} no tiene cuenta corriente activa.")
+        if cantidad <= 0:
+            raise ValueError("La cantidad a retirar debe ser positiva.")
+        if cantidad > self.saldo:
+            raise Exception(f"Fondos insuficientes en la cuenta de {self.nombre}.")
+        self.saldo -= cantidad
+        print(f"{self.nombre} retiró {cantidad}. Saldo actual: {self.saldo}")
 
-        def transferir_dinero(self, otro_usuario, cantidad):
-            """Transfiere dinero a otro usuario si es posible"""
-            if cantidad <= 0:
-                raise ValueError("La cantidad a transferir debe ser positiva.")
-            if cantidad > self.saldo:
-                raise Exception(f"{self.nombre} no tiene fondos suficientes para transferir.")
-            self.saldo -= cantidad
-            otro_usuario.saldo += cantidad
-            print(f"{self.nombre} envió {cantidad} a {otro_usuario.nombre}.")
-            print(f"Saldo actual: {self.nombre}: {self.saldo}, {otro_usuario.nombre}: {otro_usuario.saldo}")
+    def transferir_dinero(self, otro_usuario, cantidad):
+        """Transfiere dinero a otro usuario si es posible"""
+        if cantidad <= 0:
+            raise ValueError("La cantidad a transferir debe ser positiva.")
+        if cantidad > self.saldo:
+            raise Exception(f"{self.nombre} no tiene fondos suficientes para transferir.")
+        self.saldo -= cantidad
+        otro_usuario.saldo += cantidad
+        print(f"{self.nombre} envió {cantidad} a {otro_usuario.nombre}.")
+        print(f"Saldo actual: {self.nombre}: {self.saldo}, {otro_usuario.nombre}: {otro_usuario.saldo}")
 
-        def agregar_dinero(self, cantidad):
-            """Agrega dinero al saldo"""
-            if cantidad <= 0:
-                raise ValueError("La cantidad a agregar debe ser positiva.")
-            self.saldo += cantidad
-            print(f"{self.nombre} agregó {cantidad}. Saldo actual: {self.saldo}")
+    def agregar_dinero(self, cantidad):
+        """Agrega dinero al saldo"""
+        if cantidad <= 0:
+            raise ValueError("La cantidad a agregar debe ser positiva.")
+        self.saldo += cantidad
+        print(f"{self.nombre} agregó {cantidad}. Saldo actual: {self.saldo}")
 
-        def __str__(self):
-            return f"{self.nombre} | Saldo: {self.saldo} | Cuenta corriente: {self.cuenta_corriente}"
+    def __str__(self):
+        return f"{self.nombre} | Saldo: {self.saldo} | Cuenta corriente: {self.cuenta_corriente}"
 
-    # ===== Caso de uso =====
-    alicia = UsuarioBanco("Alicia", 100, True)
-    bob = UsuarioBanco("Bob", 50, True)
 
-    print("Estado inicial:")
-    print(alicia)
-    print(bob)
-    print("------------------------")
-
-    # 1. Bob agrega 20 unidades de saldo
-    bob.agregar_dinero(20)
-    print("------------------------")
-
-    # 2. Transferencia de 80 desde Bob a Alicia con manejo de error
-    try:
-        bob.transferir_dinero(alicia, 80)
-    except Exception as e:
-        print(f"Error en la transferencia: {e}")
-    print("------------------------")
-
-    # 3. Alicia retira 50
-    try:
-        alicia.retirar_dinero(50)
-    except Exception as e:
-        print(f"Error en el retiro: {e}")
-    print("------------------------")
-
-    # Estado final
-    print("Estado final:")
-    print(alicia)
-    print(bob)
-
-# ===== Ejecutamos el ejercicio =====
+# ===== Caso de uso =====
 print("Resultado del ejercicio 36:")
-ejercicio_36()
+
+alicia = UsuarioBanco("Alicia", 100, True)
+bob = UsuarioBanco("Bob", 50, True)
+
+print("Estado inicial:")
+print(alicia)
+print(bob)
+print("------------------------")
+
+# 1. Bob agrega 20 unidades de saldo
+bob.agregar_dinero(20)
+print("------------------------")
+
+# 2. Transferencia de 80 desde Bob a Alicia con manejo de error
+try:
+    bob.transferir_dinero(alicia, 80)
+except Exception as e:
+    print(f"Error en la transferencia: {e}")
+print("------------------------")
+
+# 3. Alicia retira 50
+try:
+    alicia.retirar_dinero(50)
+except Exception as e:
+    print(f"Error en el retiro: {e}")
+print("------------------------")
+
+# Estado final
+print("Estado final:")
+print(alicia)
+print(bob)
 
 
 """37. Crea una función llamada procesar_texto que procesa un texto según la opción especificada: contar_palabras, 
@@ -653,8 +645,6 @@ Código a seguir:
     número de argumentos variable según la opción indicada.
 Caso de uso:
     Comprueba el funcionamiento completo de la función procesar_texto."""
-import re
-
 def ejercicio_37():
     # Función para contar palabras
     def contar_palabras(texto):
@@ -766,8 +756,6 @@ ejercicio_39()
 
 """40. Escribe una función que tome dos parámetros: figura (una cadena que puede ser "rectangulo", "circulo" o 
 "triangulo") y datos (una tupla con los datos necesarios para calcular el área de la figura)."""
-import math
-
 def ejercicio_40(figura, datos):
     """
     Calcula el área de una figura geométrica.
